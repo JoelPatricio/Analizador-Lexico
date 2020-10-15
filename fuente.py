@@ -24,6 +24,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         pass
 
     def iniciar(self):
+        palabrasReservadas=[]
+        
         pass
 
 

@@ -546,6 +546,11 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
          <property name="enabled">
           <bool>true</bool>
          </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+          </font>
+         </property>
          <property name="readOnly">
           <bool>true</bool>
          </property>
