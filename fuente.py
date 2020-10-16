@@ -19,7 +19,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pushButton_2.clicked.connect(self.cargarArchivo)
         self.pushButton.clicked.connect(self.iniciar)
         
-        
+        columna=self.tableWidget.insertRow(self.tableWidget.rowCount())        
+        item1=QTableWidgetItem("Palabra Reservada")
+        item2 = QTableWidgetItem("while")
+        self.tableWidget.setItem(0, 0, item1)
+        self.tableWidget.setItem(0, 1, item2)
         
 
     def cargarArchivo(self):
@@ -40,7 +44,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         pass
 
     def iniciar(self):
-        #palabrasReservadas=[]
+        palabrasReservadas=[]
         
         
         pass
