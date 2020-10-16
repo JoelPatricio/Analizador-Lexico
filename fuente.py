@@ -1,30 +1,47 @@
-from PyQt5.QtCore import QFile, QIODevice
-from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtCore import QFile, QIODevice, Qt, QRect, QSize
+from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem
 from ventana1 import *
-import PyQt5.QtCore
+from PyQt5.QtWidgets import (QWidget, QPlainTextEdit, QTextEdit, QMainWindow, QAction, qApp, QApplication)
+from PyQt5.QtGui import QColor, QPainter, QTextFormat, QKeySequence, QFont
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, *args, **kwargs):
         QtWidgets.QMainWindow.__init__(self, *args, **kwargs)
         self.setupUi(self)
+        header = self.tableWidget.horizontalHeader()  
+        header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+        header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+        header = self.tableWidget_2.horizontalHeader()
+        header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
+        header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
 
         self.pushButton_2.clicked.connect(self.cargarArchivo)
         self.pushButton.clicked.connect(self.iniciar)
+        
+        
+        
 
     def cargarArchivo(self):
         self.plainTextEdit.clear()
         archivo = QFileDialog.getOpenFileName(self)
-        archivo = str(archivo[0])
+        archivo = str(archivo[0])        
         contenido=open(archivo,'r')
+        linea=""
+        texto=''
         for linea in contenido.readlines():
-            self.plainTextEdit.appendPlainText(linea)
+            texto =texto.__add__(linea)
         contenido.close()
+        textoAux=''
+        for linea in range(3,len(texto)):
+            textoAux = textoAux.__add__(texto[linea])            
+        self.plainTextEdit.appendPlainText(textoAux)
         self.pushButton.setEnabled(True)
         pass
 
     def iniciar(self):
-        palabrasReservadas=[]
+        #palabrasReservadas=[]
+        
         
         pass
 
