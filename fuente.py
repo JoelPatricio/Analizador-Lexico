@@ -15,6 +15,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         header = self.tableWidget_2.horizontalHeader()
         header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
         header.setSectionResizeMode(1, QtWidgets.QHeaderView.Stretch)
+        header=self.tableWidget_3.horizontalHeader()
+        header.setSectionResizeMode(0,QtWidgets.QHeaderView.Stretch)
 
         self.pushButton_2.clicked.connect(self.cargarArchivo)
         self.pushButton_3.clicked.connect(self.leerAutomata)        
@@ -52,11 +54,14 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         estadosf=estadosf.replace('\n','')
         estadosf=estadosf.split(',')
         global estadosFinales
+        global retroceso
         estadosFinales=[]
+        retroceso=[]
         for x in estadosf:
             x=x.split(':')
-            x[1]=x[1].replace('\n','')
+            x[2]=x[2].replace('\n','')
             estadosFinales.append(dict.fromkeys(x[0],x[1]))
+            retroceso.append(dict.fromkeys(x[0],x[2]))
         pass
 
     def crearAutomata(self,linea):
@@ -78,13 +83,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         primeraLinea=True
         for linea in contenido.readlines():
             if(primeraLinea==True):
+                print(linea)
                 self.leerEstadosFinales(linea)
                 primeraLinea=False
             else:
                 linea=linea.split("=")
                 tablaTransicion.append(dict.fromkeys(linea[0],self.crearAutomata(linea[1])))
         contenido.close()
-        print(palabrasReservadas)
+        print(estadosFinales)
+        print(retroceso)
         pass
 
     def cargarPalabrasReservadas(self):
@@ -96,6 +103,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         for linea in contenido.readlines():
             linea=linea.rstrip('\n')
             palabrasReservadas.append(linea)
+            columna=self.tableWidget_3.insertRow(self.tableWidget.rowCount())        
+            item1=QTableWidgetItem(linea)
+            self.tableWidget_3.setItem(0, 0, item1)
         contenido.close()
         pass
 
