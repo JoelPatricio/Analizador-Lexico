@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem
 from ventana1 import *
 from PyQt5.QtWidgets import (QWidget, QPlainTextEdit, QTextEdit, QMainWindow, QAction, qApp, QApplication)
 from PyQt5.QtGui import QColor, QPainter, QTextFormat, QKeySequence, QFont
+import re
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -59,7 +60,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         retroceso=[]
         for x in estadosf:
             x=x.split(':')
-            x[2]=x[2].replace('\n','')
+            #x[2]=x[2].replace('\n','')
             estadosFinales.append(dict.fromkeys(x[0],x[1]))
             retroceso.append(dict.fromkeys(x[0],x[2]))
         pass
@@ -87,11 +88,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.leerEstadosFinales(linea)
                 primeraLinea=False
             else:
-                linea=linea.split("=")
+                linea = linea.split("==>")
                 tablaTransicion.append(dict.fromkeys(linea[0],self.crearAutomata(linea[1])))
         contenido.close()
         print(estadosFinales)
         print(retroceso)
+        print(tablaTransicion)
         pass
 
     def cargarPalabrasReservadas(self):
@@ -109,10 +111,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         contenido.close()
         pass
 
+    def buscarEstado(self,letra,estadoInicial,posicion):
+        
+        pass
+
     def iniciarAnalisis(self):
         tam=len(textoAux)
         i=0
         while(i<tam):
+            buscarEstado(textoAux[i],0,i)
             
 
 

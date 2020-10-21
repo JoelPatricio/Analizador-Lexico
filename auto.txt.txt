@@ -1,0 +1,13 @@
+2:Identificador,5:EnteroNegativo,8:EnteroPositivo,9:Suma,10:SumaAbreviada,11:Incremento:14:Coma,20:While,23:Do,27:For,30:If 
+0=let1,1=let+dig,otro:2
+0==>-:3,3=dig4,4=dig,otro:5
+0=+6,6=dig7,7=dig,otro:8
+0=+7,7=dig,otro:8
+6=otro:9
+6==:10
+6=+:11
+0={12,12=,13,13=}:14
+0=w15,15=h16,16=i17,17=l18,18=e19,otro:20
+0=d21,21=o22,otro:23
+0=f24,24=o25,25=r26,otro:27
+0=i28,28=f29,otro:30
