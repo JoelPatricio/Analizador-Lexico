@@ -1,3 +1,4 @@
+from os import times
 from PyQt5.QtCore import QFile, QIODevice, Qt, QRect, QSize
 from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem
 from ventana1 import *
@@ -23,13 +24,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.pushButton_3.clicked.connect(self.leerAutomata)        
         self.pushButton_4.clicked.connect(self.cargarPalabrasReservadas)
         self.pushButton.clicked.connect(self.iniciarAnalisis)
-
-        
-        #columna=self.tableWidget.insertRow(self.tableWidget.rowCount())        
-        #item1=QTableWidgetItem("Palabra Reservada")
-        #item2 = QTableWidgetItem("while")
-        #self.tableWidget.setItem(0, 0, item1)
-        #self.tableWidget.setItem(0, 1, item2)
         
 
     def cargarArchivo(self):
@@ -56,22 +50,21 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         estadosf=estadosf.split(',')
         global estadosFinales
         global retroceso
-        estadosFinales=[]
-        retroceso=[]
+        estadosFinales={}
+        retroceso={}
         for x in estadosf:
             x=x.split(':')
-            #x[2]=x[2].replace('\n','')
-            estadosFinales.append(dict.fromkeys(x[0],x[1]))
-            retroceso.append(dict.fromkeys(x[0],x[2]))
+            estadosFinales[x[0]]=x[1]
+            retroceso[x[0]]=x[2]
         pass
 
     def crearAutomata(self,linea):
         linea=linea.replace('\n','')
-        linea=linea.split(',')
-        estadoN=[]
+        linea=linea.split('=>')
+        estadoN={}
         for x in linea:
             x=x.split(':')
-            estadoN.append(dict.fromkeys(x[0],x[1]))
+            estadoN[x[0]]=x[1]
         return estadoN
         pass
 
@@ -80,7 +73,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         archivo = str(archivo[0])
         contenido = open(archivo, 'r')
         global tablaTransicion
-        tablaTransicion=[]
+        tablaTransicion={}
         primeraLinea=True
         for linea in contenido.readlines():
             if(primeraLinea==True):
@@ -89,11 +82,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 primeraLinea=False
             else:
                 linea = linea.split("==>")
-                tablaTransicion.append(dict.fromkeys(linea[0],self.crearAutomata(linea[1])))
+                tablaTransicion[linea[0]]=self.crearAutomata(linea[1])
         contenido.close()
-        print(estadosFinales)
         print(retroceso)
-        print(tablaTransicion)
         pass
 
     def cargarPalabrasReservadas(self):
@@ -101,33 +92,109 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         archivo = str(archivo[0])        
         contenido=open(archivo,'r')
         global palabrasReservadas
-        palabrasReservadas = []
+        palabrasReservadas = {}
         for linea in contenido.readlines():
             linea=linea.rstrip('\n')
-            palabrasReservadas.append(linea)
-            columna=self.tableWidget_3.insertRow(self.tableWidget.rowCount())        
+            palabrasReservadas[linea]=linea
+            filas=self.tableWidget_3.rowCount()
+            columna=self.tableWidget_3.insertRow(filas)
             item1=QTableWidgetItem(linea)
-            self.tableWidget_3.setItem(0, 0, item1)
+            self.tableWidget_3.setItem(filas, 0, item1)
         contenido.close()
+        print(palabrasReservadas)
         pass
 
-    def buscarEstado(self,letra,estadoInicial,posicion):
-        
+    def crearEstado(self, cadena,estado):
+        print("Creando estado")
+        try:
+            if(palabrasReservadas[cadena]):
+                filas = self.tableWidget.rowCount()
+                columna = self.tableWidget.insertRow(filas)
+                item1 = QTableWidgetItem("Palabra Reservada")
+                item2 = QTableWidgetItem(cadena)
+                self.tableWidget.setItem(filas, 0, item1)
+                self.tableWidget.setItem(filas, 1, item2)
+        except KeyError:
+            filas = self.tableWidget.rowCount()
+            columna = self.tableWidget.insertRow(filas)
+            item1 = QTableWidgetItem(estado)
+            item2 = QTableWidgetItem(cadena)
+            self.tableWidget.setItem(filas, 0, item1)
+            self.tableWidget.setItem(filas, 1, item2)
         pass
+
+    def buscarEstado(self,caracter,estadoInicial,posicion,cadena):
+        global errorReturn
+        print("Valor Evaluar: "+caracter)        
+        estadoInicial=str(estadoInicial)
+        cadena=str(cadena)
+        if(caracter!=" " and textoAux[posicion]!=";"):
+            try:
+                if(estadosFinales[estadoInicial]):
+                    print("Cadena: "+cadena+":")
+                    print("Estado final: "+estadosFinales[estadoInicial])
+                    print("Retroceso: "+retroceso[estadoInicial])
+                    self.crearEstado(cadena, estadosFinales[estadoInicial])
+                    pos = posicion
+                    retro = retroceso[estadoInicial]
+                    retro = int(retro)
+                    aux = int(pos-retro)
+                    print("========")
+                    print(aux)
+                    errorReturn = aux
+            except KeyError:
+                if(caracter.isdigit()):
+                    print(tablaTransicion[estadoInicial]["dig"])
+                    if(tablaTransicion[estadoInicial]["dig"] != "-"):
+                        self.buscarEstado(textoAux[posicion+1], tablaTransicion[estadoInicial]["dig"], posicion+1, cadena+str(textoAux[posicion]))
+                elif(re.search(r"[aA-zZ]", caracter) != None and caracter != " "):
+                    print(tablaTransicion[estadoInicial]["let"])
+                    if(tablaTransicion[estadoInicial]["let"] != "-"):
+                        self.buscarEstado(textoAux[posicion+1], tablaTransicion[estadoInicial]["let"], posicion+1, cadena+str(textoAux[posicion]))
+                elif(tablaTransicion[estadoInicial][caracter] != "-"):
+                    self.buscarEstado(textoAux[posicion+1], tablaTransicion[estadoInicial][caracter], posicion+1, cadena+str(textoAux[posicion]))
+                elif(tablaTransicion[estadoInicial]["otro"] != "-"):
+                    self.buscarEstado(textoAux[posicion], tablaTransicion[estadoInicial]["otro"], posicion, cadena)
+                else:
+                    errorReturn = -1
+                    print(errorReturn)
+        else:
+            if(caracter==" "):
+                self.buscarEstado(textoAux[posicion+1], tablaTransicion[estadoInicial]["otro"], posicion, cadena)
+            else:
+                errorReturn = -2
+                #self.buscarEstado(textoAux[posicion], tablaTransicion[estadoInicial]["otro"], posicion, cadena)
+        return errorReturn
 
     def iniciarAnalisis(self):
-        tam=len(textoAux)
         i=0
-        while(i<tam):
-            buscarEstado(textoAux[i],0,i)
-            
+        while(i<len(textoAux)):
+            if(textoAux[i]==" "):
+                i=i+1
+                pass
 
-
-
-            i=i+1
+            estado=self.buscarEstado(textoAux[i],0,i,"")
+            print("ES el estado return: "+str(estado))
+            if(estado==-1):
+                filas = self.tableWidget_2.rowCount()
+                columna = self.tableWidget_2.insertRow(filas)
+                aux = "Posición: "+str(i)
+                aux2 = "No hay enlace con caracter: "+str(textoAux[i])
+                item1 = QTableWidgetItem(aux)
+                item2 = QTableWidgetItem(aux2)
+                self.tableWidget_2.setItem(filas, 0, item1)
+                self.tableWidget_2.setItem(filas, 1, item2)
+                i = i+1
+            elif(estado == -2):
+                break
+            else:
+                print("------------------")
+                print(estado)
+                i=estado
+                i=int(i)
+                i=i+1
 
         pass
-    
 
 
 if __name__ == "__main__":
