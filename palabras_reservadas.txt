@@ -16,5 +16,4 @@ default
 continue
 break
 register
-sizeof
 typedef
