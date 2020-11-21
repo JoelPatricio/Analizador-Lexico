@@ -1,1 +1,15 @@
-﻿float suma=-55.5 int aux1=+10 int aux2= 10 int aux3=.5 float suma2=-.5 ;
+﻿﻿PROGRAMA EJEMPLO
+    CONSTANTES
+        NUM= 23
+        CAR=' X'
+    ARREGLOS
+        DATOS={ 3, 2, 1, 0}
+INICIO
+    ESCRIBE(' A');
+    ESCRIBE('=');
+    SI (DATOS. LENGTH > 1) ENTONCES
+        PARA var= 1 HASTA datos. LENGTH PASO +1 HACER
+            ESCRIBE(DATOS [ i]);
+        FIN
+    FIN
+FIN
