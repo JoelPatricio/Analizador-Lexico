@@ -1,4 +1,4 @@
-from os import times
+from os import error, times
 from PyQt5.QtCore import QFile, QIODevice, Qt, QRect, QSize
 from PyQt5.QtWidgets import QFileDialog, QTableWidgetItem
 from ventana1 import *
@@ -37,17 +37,30 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         for linea in contenidoTxt.readlines():
             texto = texto.__add__(linea)
         contenidoTxt.close()
+<<<<<<< HEAD
         textoAux = ''
         for linea in range(3, len(texto)):
             textoAux = textoAux.__add__(texto[linea])
+=======
+        textoAux=''
+        for linea in range(6,len(texto)):
+            textoAux = textoAux.__add__(texto[linea])            
+>>>>>>> joel
         self.plainTextEdit.appendPlainText(textoAux)
         self.pushButton.setEnabled(True)
         pass
 
+<<<<<<< HEAD
     def leerEstadosFinales(self, linea):
         estadosf = linea
         estadosf = estadosf.replace('\n', '')
         estadosf = estadosf.split(',')
+=======
+    def leerEstadosFinales(self,linea):
+        estadosf=linea
+        estadosf=estadosf.replace('\n','')
+        estadosf=estadosf.split('==>')
+>>>>>>> joel
         global estadosFinales
         global retroceso
         estadosFinales = {}
@@ -125,6 +138,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def buscarEstado(self, caracter, estadoInicial, posicion, cadena):
         global errorReturn
+<<<<<<< HEAD
         print("Valor Evaluar: "+caracter)
         estadoInicial = str(estadoInicial)
         cadena = str(cadena)
@@ -166,12 +180,72 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             if(caracter == " "):
                 self.buscarEstado(
                     textoAux[posicion+1], tablaTransicion[estadoInicial]["otro"], posicion, cadena)
+=======
+        if(caracter=="\n"):
+            print("Valor Evaluar:/n:")
+        elif(caracter==" "):
+            print("Valor Evaluar:&espacio:")
+        else:
+            print("Valor Evaluar:"+caracter+":")
+
+        estadoInicial=str(estadoInicial)
+        print("Estado Actual: "+estadoInicial)
+        cadena=str(cadena)
+        print("Cadena Actual: "+cadena)
+        try:
+            if(caracter!=" " or caracter!="\n"):
+                try:
+                    if(estadosFinales[estadoInicial]):
+                        print("Cadena: "+cadena+":")
+                        print("Estado final: "+estadosFinales[estadoInicial])
+                        print("Retroceso: "+retroceso[estadoInicial])
+                        self.crearEstado(cadena, estadosFinales[estadoInicial])
+                        pos = posicion
+                        retro = retroceso[estadoInicial]
+                        retro = int(retro)
+                        aux = int(pos-retro)
+                        print("========")
+                        print(aux)
+                        errorReturn = aux
+                except KeyError:
+                    if(caracter.isdigit()):
+                        print(tablaTransicion[estadoInicial]["dig"])
+                        if(tablaTransicion[estadoInicial]["dig"] != "-"):
+                            self.buscarEstado(textoAux[posicion+1], tablaTransicion[estadoInicial]["dig"], posicion+1, cadena+str(textoAux[posicion]))
+                    elif(re.search(r"[aA-zZ]", caracter) != None or caracter ==" " or caracter=="\n"):
+                        print(tablaTransicion[estadoInicial]["let"])
+                        if(caracter==" "):
+                            self.buscarEstado(textoAux[posicion], tablaTransicion[estadoInicial]["otro"], posicion, cadena)
+                        elif(caracter=="\n"):
+                            self.buscarEstado(textoAux[posicion], tablaTransicion[estadoInicial]["otro"], posicion, cadena)
+                        elif(tablaTransicion[estadoInicial]["let"] != "-"):
+                            self.buscarEstado(textoAux[posicion+1], tablaTransicion[estadoInicial]["let"], posicion+1, cadena+str(textoAux[posicion]))
+                        
+                    else:
+                        try:
+                            if(tablaTransicion[estadoInicial][caracter] != "-"):
+                                print("caracter diferente: "+caracter)
+                                self.buscarEstado(textoAux[posicion+1], tablaTransicion[estadoInicial][caracter], posicion+1, cadena+str(textoAux[posicion]))
+                            elif(tablaTransicion[estadoInicial]["otro"] != "-"):
+                                print("caracter OTRO: "+caracter)
+                                self.buscarEstado(textoAux[posicion], tablaTransicion[estadoInicial]["otro"], posicion, cadena)
+                        except KeyError:
+                            errorReturn = -1
+                            print(errorReturn)
+>>>>>>> joel
             else:
-                errorReturn = -2
-                #self.buscarEstado(textoAux[posicion], tablaTransicion[estadoInicial]["otro"], posicion, cadena)
+                if(caracter==" "):
+                    self.buscarEstado(textoAux[posicion+1], tablaTransicion[estadoInicial]["otro"], posicion, cadena)
+                else:
+                    errorReturn = -2
+                    #self.buscarEstado(textoAux[posicion], tablaTransicion[estadoInicial]["otro"], posicion, cadena)
+        except IndexError:
+            errorReturn = -2
+        
         return errorReturn
 
     def iniciarAnalisis(self):
+<<<<<<< HEAD
         i = 0
         while(i < len(textoAux)):
             if(textoAux[i] == " "):
@@ -198,7 +272,50 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 i = estado
                 i = int(i)
                 i = i+1
+=======
+        i=0
+        while(i<len(textoAux)):
+            
+            print(textoAux[i])
+            print("Posicion i: "+str(i))
+            
+            if(textoAux[i]==" "):
+                print("Espacio")
+                j=i
+                while(textoAux[j]==" "):
+                    j=j+1
 
+                i=j
+            
+            elif (textoAux[i]=="\n"):
+                print("Salto")
+                i=i+1
+            else:
+                estado=self.buscarEstado(textoAux[i],0,i,"")
+                print("ES el estado return: "+str(estado))
+                if(estado == -1):
+                    filas = self.tableWidget_2.rowCount()
+                    columna = self.tableWidget_2.insertRow(filas)
+                    aux = "Posición: "+str(i)
+                    aux2 = "No hay enlace con caracter: "+str(textoAux[i])
+                    item1 = QTableWidgetItem(aux)
+                    item2 = QTableWidgetItem(aux2)
+                    self.tableWidget_2.setItem(filas, 0, item1)
+                    self.tableWidget_2.setItem(filas, 1, item2)
+                    i = i+1
+                elif(estado == -2):
+                    break
+                else:
+                    print("------------------")
+                    print(estado)
+                    i=estado
+                    i=int(i)
+                    i=i+1
+
+>>>>>>> joel
+
+                    
+            
         pass
 
 
