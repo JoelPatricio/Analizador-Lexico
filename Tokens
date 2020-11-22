@@ -1,0 +1,91 @@
+reservada = (
+    # Palabras Reservadas
+    'INCLUDE',
+    'USING',
+    'NAMESPACE',
+    'STD',
+    'COUT',
+    'CIN',
+   'GET',
+   'CADENA',
+  'RETURN',
+   'VOID',
+    'INT',
+    'ENDL',
+)
+tokens = reservada + (
+    'IDENTIFICADOR',
+    'ENTERO',
+    'ASIGNAR',
+
+    'SUMA',
+    'RESTA',
+    'MULT',
+    'DIV',
+    'POTENCIA',
+    'MODULO',
+
+   'MINUSMINUS',
+   'PLUSPLUS',
+
+    #Condiones
+   'SI',
+    'SINO',
+    #Ciclos
+   'MIENTRAS',
+   'PARA',
+    #logica
+    'AND',
+    'OR',
+    'NOT',
+    'MENORQUE',
+    'MENORIGUAL',
+    'MAYORQUE',
+    'MAYORIGUAL',
+    'IGUAL',
+    'DISTINTO',
+    # Symbolos
+    'NUMERAL',
+
+    'PARIZQ',
+    'PARDER',
+    'CORIZQ',
+    'CORDER',
+    'LLAIZQ',
+    'LLADER',
+    
+    # Otros
+    'PUNTOCOMA',
+    'COMA',
+    'COMDOB',
+    'MAYORDER', #>>
+    'MAYORIZQ', #<<
+)
+
+# Reglas de Expresiones Regualres para token de Contexto simple
+
+t_SUMA = r'\+'
+t_RESTA = r'-'
+t_MINUSMINUS = r'\-\-'
+# t_PUNTO = r'\.'
+t_MULT = r'\*'
+t_DIV = r'/'
+t_MODULO = r'\%'
+t_POTENCIA = r'(\*{2} | \^)'
+
+t_ASIGNAR = r'='
+# Expresiones Logicas
+t_AND = r'\&\&'
+t_OR = r'\|{2}'
+t_NOT = r'\!'
+t_MENORQUE = r'<'
+t_MAYORQUE = r'>'
+t_PUNTOCOMA = ';'
+t_COMA = r','
+t_PARIZQ = r'\('
+t_PARDER = r'\)'
+t_CORIZQ = r'\['
+t_CORDER = r'\]'
+t_LLAIZQ = r'{'
+t_LLADER = r'}'
+t_COMDOB = r'\"'
