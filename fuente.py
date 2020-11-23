@@ -103,6 +103,11 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         contenido.close()
         print(palabrasReservadas)
         pass
+    
+    def pintar(self,cadena,color):
+        
+        pass
+
 
     def crearEstado(self, cadena, estado):
         print("Creando estado")
@@ -114,6 +119,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 item2 = QTableWidgetItem(cadena)
                 self.tableWidget.setItem(filas, 0, item1)
                 self.tableWidget.setItem(filas, 1, item2)
+                if(len(cadena)>1):
+                    self.textEdit.insertHtml("<body><p style='color:green';>"+cadena+"</p></body>")
+                else:
+                    cadena=cadena.upper()
+                    self.textEdit.insertHtml("<body><p style='color:green';>"+cadena+"</p></body>")
+                pass
+
         except KeyError:
             filas = self.tableWidget.rowCount()
             columna = self.tableWidget.insertRow(filas)
@@ -121,6 +133,16 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             item2 = QTableWidgetItem(cadena)
             self.tableWidget.setItem(filas, 0, item1)
             self.tableWidget.setItem(filas, 1, item2)
+            if(estado=="enteroPositivo" or estado=="enteroPositivoConSigno" or estado=="enteroNegativo"):
+                self.textEdit.insertHtml("<body><p style='color:blue';>"+cadena+"</p></body>")
+            else:
+                if(cadena=="(" or cadena==")"):
+                    self.textEdit.insertHtml("<body><p style='color:red';>"+cadena+"</p></body>")
+                else:
+                    if(len(cadena)>1):
+                        cadena=cadena.upper()
+                    self.textEdit.insertHtml("<body><p style='color:black';>"+cadena+"</p></body>")
+            pass
         pass
 
     def buscarEstado(self, caracter, estadoInicial, posicion, cadena):
@@ -199,12 +221,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 j=i
                 while(textoAux[j]==" "):
                     j=j+1
-
                 i=j
+                self.textEdit.insertHtml("&nbsp;")
             
             elif (textoAux[i]=="\n"):
                 print("Salto")
                 i=i+1
+                self.textEdit.insertHtml("<br>")
             else:
                 estado=self.buscarEstado(textoAux[i],0,i,"")
                 print("ES el estado return: "+str(estado))
