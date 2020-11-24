@@ -38,7 +38,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             texto = texto.__add__(linea)
         contenidoTxt.close()
         textoAux = ''
-        for linea in range(3, len(texto)):
+        for linea in range(len(texto)): #for linea in range(3, len(texto)):
             textoAux = textoAux.__add__(texto[linea])
         self.plainTextEdit.appendPlainText(textoAux)
         self.pushButton.setEnabled(True)
@@ -120,9 +120,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.tableWidget.setItem(filas, 0, item1)
                 self.tableWidget.setItem(filas, 1, item2)
                 if(len(cadena)>1):
+                    cadena=cadena.upper()
                     self.textEdit.insertHtml("<body><p style='color:green';>"+cadena+"</p></body>")
                 else:
-                    cadena=cadena.upper()
                     self.textEdit.insertHtml("<body><p style='color:green';>"+cadena+"</p></body>")
                 pass
 
